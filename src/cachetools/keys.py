@@ -5,7 +5,8 @@ __all__ = ("hashkey", "methodkey", "typedkey", "typedmethodkey")
 
 from typing import Any, Callable, Hashable, Tuple, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 class _HashedTuple(tuple):
     """A tuple that ensures that hash() will be called no more than once
@@ -23,10 +24,22 @@ class _HashedTuple(tuple):
             self.__hashvalue = hashvalue = hash(self)
         return hashvalue
 
-    def __add__(self, other: Tuple[Any, ...], add: Callable[[Tuple[Any, ...], Tuple[Any, ...]], Tuple[Any, ...]] = tuple.__add__) -> '_HashedTuple':
+    def __add__(
+        self,
+        other: Tuple[Any, ...],
+        add: Callable[
+            [Tuple[Any, ...], Tuple[Any, ...]], Tuple[Any, ...]
+        ] = tuple.__add__,
+    ) -> "_HashedTuple":
         return _HashedTuple(add(self, other))
 
-    def __radd__(self, other: Tuple[Any, ...], add: Callable[[Tuple[Any, ...], Tuple[Any, ...]], Tuple[Any, ...]] = tuple.__add__) -> '_HashedTuple':
+    def __radd__(
+        self,
+        other: Tuple[Any, ...],
+        add: Callable[
+            [Tuple[Any, ...], Tuple[Any, ...]], Tuple[Any, ...]
+        ] = tuple.__add__,
+    ) -> "_HashedTuple":
         return _HashedTuple(add(other, self))
 
     def __getstate__(self) -> dict:
