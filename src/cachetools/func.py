@@ -54,7 +54,7 @@ def lru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
         key = typedkey
     else:
         key = hashkey
-    return cached(cache=LRUCache(maxsize), key=key)
+    return cached(cache=LRUCache(maxsize), key=key)  # type: ignore
 
 
 def mru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
@@ -66,7 +66,7 @@ def mru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
         key = typedkey
     else:
         key = hashkey
-    return cached(cache=MRUCache(maxsize), key=key)
+    return cached(cache=MRUCache(maxsize), key=key)  # type: ignore
 
 
 def rr_cache(
@@ -83,7 +83,7 @@ def rr_cache(
         key = typedkey
     else:
         key = hashkey
-    return cached(cache=RRCache(maxsize, choice=choice), key=key)
+    return cached(cache=RRCache(maxsize, choice=choice), key=key)  # type: ignore
 
 
 def ttl_cache(
@@ -100,4 +100,4 @@ def ttl_cache(
         key = typedkey
     else:
         key = hashkey
-    return cached(cache=TTLCache(maxsize, ttl, timer), key=key)
+    return cached(cache=TTLCache(maxsize, ttl, timer), key=key)  # type: ignore
