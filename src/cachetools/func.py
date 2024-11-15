@@ -1,20 +1,22 @@
 """`functools.lru_cache` compatible memoizing function decorators."""
-__all__ = ('fifo_cache', 'lfu_cache', 'lru_cache', 'mru_cache', 'rr_cache', 'ttl_cache')
+
+__all__ = ("fifo_cache", "lfu_cache", "lru_cache", "mru_cache", "rr_cache", "ttl_cache")
 import math
 import random
 import time
+
 try:
     from threading import RLock
 except ImportError:
-    from dummy_threading import RLock
+    pass
 from . import FIFOCache, LFUCache, LRUCache, MRUCache, RRCache, TTLCache
 from . import cached
-from . import keys
+
 
 class _UnboundTTLCache(TTLCache):
-
     def __init__(self, ttl, timer):
         TTLCache.__init__(self, math.inf, ttl, timer)
+
 
 def fifo_cache(maxsize=128, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
@@ -28,6 +30,7 @@ def fifo_cache(maxsize=128, typed=False):
         key = hashkey
     return cached(cache=FIFOCache(maxsize), key=key)
 
+
 def lfu_cache(maxsize=128, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Least Frequently Used (LFU)
@@ -39,6 +42,7 @@ def lfu_cache(maxsize=128, typed=False):
     else:
         key = hashkey
     return cached(cache=LFUCache(maxsize), key=key)
+
 
 def lru_cache(maxsize=128, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
@@ -52,6 +56,7 @@ def lru_cache(maxsize=128, typed=False):
         key = hashkey
     return cached(cache=LRUCache(maxsize), key=key)
 
+
 def mru_cache(maxsize=128, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Most Recently Used (MRU)
@@ -62,6 +67,7 @@ def mru_cache(maxsize=128, typed=False):
     else:
         key = hashkey
     return cached(cache=MRUCache(maxsize), key=key)
+
 
 def rr_cache(maxsize=128, choice=random.choice, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
@@ -74,6 +80,7 @@ def rr_cache(maxsize=128, choice=random.choice, typed=False):
     else:
         key = hashkey
     return cached(cache=RRCache(maxsize, choice=choice), key=key)
+
 
 def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
     """Decorator to wrap a function with a memoizing callable that saves
