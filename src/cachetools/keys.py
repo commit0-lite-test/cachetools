@@ -1,5 +1,7 @@
 """Key functions for memoizing decorators."""
-__all__ = ('hashkey', 'methodkey', 'typedkey', 'typedmethodkey')
+
+__all__ = ("hashkey", "methodkey", "typedkey", "typedmethodkey")
+
 
 class _HashedTuple(tuple):
     """A tuple that ensures that hash() will be called no more than once
@@ -8,6 +10,7 @@ class _HashedTuple(tuple):
     library functools implementation.
 
     """
+
     __hashvalue = None
 
     def __hash__(self, hash=tuple.__hash__):
@@ -24,7 +27,10 @@ class _HashedTuple(tuple):
 
     def __getstate__(self):
         return {}
+
+
 _kwmark = (_HashedTuple,)
+
 
 def hashkey(*args, **kwargs):
     """Return a cache key for the specified hashable arguments."""
@@ -33,21 +39,28 @@ def hashkey(*args, **kwargs):
     else:
         return _HashedTuple(args)
 
+
 def methodkey(self, *args, **kwargs):
     """Return a cache key for use with cached methods."""
     return _HashedTuple((self,) + args + sum(sorted(kwargs.items()), _kwmark))
 
+
 def typedkey(*args, **kwargs):
     """Return a typed cache key for the specified hashable arguments."""
     key = hashkey(*args, **kwargs)
-    return _HashedTuple(tuple(type(v) for v in args) + 
-                        tuple(type(v) for _, v in sorted(kwargs.items())) + 
-                        key)
+    return _HashedTuple(
+        tuple(type(v) for v in args)
+        + tuple(type(v) for _, v in sorted(kwargs.items()))
+        + key
+    )
+
 
 def typedmethodkey(self, *args, **kwargs):
     """Return a typed cache key for use with cached methods."""
     key = methodkey(self, *args, **kwargs)
-    return _HashedTuple((type(self),) + 
-                        tuple(type(v) for v in args) + 
-                        tuple(type(v) for _, v in sorted(kwargs.items())) + 
-                        key)
+    return _HashedTuple(
+        (type(self),)
+        + tuple(type(v) for v in args)
+        + tuple(type(v) for _, v in sorted(kwargs.items()))
+        + key
+    )
