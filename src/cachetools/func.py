@@ -14,7 +14,7 @@ F = TypeVar('F', bound=Callable[..., Any])
 
 
 class _UnboundTTLCache(TTLCache):
-    def __init__(self, ttl, timer):
+    def __init__(self, ttl: float, timer: Callable[[], float]):
         TTLCache.__init__(self, math.inf, ttl, timer)
 
 
