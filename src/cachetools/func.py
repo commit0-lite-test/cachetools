@@ -28,7 +28,7 @@ def fifo_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
         key = typedkey
     else:
         key = hashkey
-    return cached(cache=FIFOCache(maxsize), key=key)
+    return cached(cache=FIFOCache(maxsize), key=key)  # type: ignore
 
 
 def lfu_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
@@ -41,7 +41,7 @@ def lfu_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
         key = typedkey
     else:
         key = hashkey
-    return cached(cache=LFUCache(maxsize), key=key)
+    return cached(cache=LFUCache(maxsize), key=key)  # type: ignore
 
 
 def lru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
