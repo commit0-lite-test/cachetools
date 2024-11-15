@@ -4,13 +4,13 @@ __all__ = ("fifo_cache", "lfu_cache", "lru_cache", "mru_cache", "rr_cache", "ttl
 import math
 import random
 import time
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Callable, TypeVar
 
 from . import FIFOCache, LFUCache, LRUCache, MRUCache, RRCache, TTLCache
 from . import cached
 from .keys import hashkey, typedkey
 
-F = TypeVar('F', bound=Callable[..., Any])
+F = TypeVar("F", bound=Callable[..., Any])
 
 
 class _UnboundTTLCache(TTLCache):
@@ -69,7 +69,11 @@ def mru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
     return cached(cache=MRUCache(maxsize), key=key)
 
 
-def rr_cache(maxsize: int = 128, choice: Callable[[list], Any] = random.choice, typed: bool = False) -> Callable[[F], F]:
+def rr_cache(
+    maxsize: int = 128,
+    choice: Callable[[list], Any] = random.choice,
+    typed: bool = False,
+) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Random Replacement (RR)
     algorithm.
@@ -82,7 +86,12 @@ def rr_cache(maxsize: int = 128, choice: Callable[[list], Any] = random.choice, 
     return cached(cache=RRCache(maxsize, choice=choice), key=key)
 
 
-def ttl_cache(maxsize: int = 128, ttl: float = 600, timer: Callable[[], float] = time.monotonic, typed: bool = False) -> Callable[[F], F]:
+def ttl_cache(
+    maxsize: int = 128,
+    ttl: float = 600,
+    timer: Callable[[], float] = time.monotonic,
+    typed: bool = False,
+) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Least Recently Used (LRU)
     algorithm with a per-item time-to-live (TTL) value.
