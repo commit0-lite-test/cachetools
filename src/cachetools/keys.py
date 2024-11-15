@@ -18,9 +18,7 @@ class _HashedTuple(tuple):
 
     __hashvalue: int | None = None
 
-    def __hash__(
-        self, hash: Callable[[Tuple[Any, ...]], int] = tuple.__hash__
-    ) -> int:
+    def __hash__(self, hash: Callable[[Tuple[Any, ...]], int] = tuple.__hash__) -> int:
         hashvalue = self.__hashvalue
         if hashvalue is None:
             self.__hashvalue = hashvalue = hash(self)
