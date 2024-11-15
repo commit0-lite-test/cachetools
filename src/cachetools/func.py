@@ -4,13 +4,13 @@ __all__ = ("fifo_cache", "lfu_cache", "lru_cache", "mru_cache", "rr_cache", "ttl
 import math
 import random
 import time
+from typing import Any, Callable, Optional, TypeVar
 
-try:
-    from threading import RLock
-except ImportError:
-    pass
 from . import FIFOCache, LFUCache, LRUCache, MRUCache, RRCache, TTLCache
 from . import cached
+from .keys import hashkey, typedkey
+
+F = TypeVar('F', bound=Callable[..., Any])
 
 
 class _UnboundTTLCache(TTLCache):
@@ -18,7 +18,7 @@ class _UnboundTTLCache(TTLCache):
         TTLCache.__init__(self, math.inf, ttl, timer)
 
 
-def fifo_cache(maxsize=128, typed=False):
+def fifo_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a First In First Out (FIFO)
     algorithm.
@@ -31,7 +31,7 @@ def fifo_cache(maxsize=128, typed=False):
     return cached(cache=FIFOCache(maxsize), key=key)
 
 
-def lfu_cache(maxsize=128, typed=False):
+def lfu_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Least Frequently Used (LFU)
     algorithm.
@@ -44,7 +44,7 @@ def lfu_cache(maxsize=128, typed=False):
     return cached(cache=LFUCache(maxsize), key=key)
 
 
-def lru_cache(maxsize=128, typed=False):
+def lru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Least Recently Used (LRU)
     algorithm.
@@ -57,7 +57,7 @@ def lru_cache(maxsize=128, typed=False):
     return cached(cache=LRUCache(maxsize), key=key)
 
 
-def mru_cache(maxsize=128, typed=False):
+def mru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Most Recently Used (MRU)
     algorithm.
@@ -69,7 +69,7 @@ def mru_cache(maxsize=128, typed=False):
     return cached(cache=MRUCache(maxsize), key=key)
 
 
-def rr_cache(maxsize=128, choice=random.choice, typed=False):
+def rr_cache(maxsize: int = 128, choice: Callable[[list], Any] = random.choice, typed: bool = False) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Random Replacement (RR)
     algorithm.
@@ -82,7 +82,7 @@ def rr_cache(maxsize=128, choice=random.choice, typed=False):
     return cached(cache=RRCache(maxsize, choice=choice), key=key)
 
 
-def ttl_cache(maxsize=128, ttl=600, timer=time.monotonic, typed=False):
+def ttl_cache(maxsize: int = 128, ttl: float = 600, timer: Callable[[], float] = time.monotonic, typed: bool = False) -> Callable[[F], F]:
     """Decorator to wrap a function with a memoizing callable that saves
     up to `maxsize` results based on a Least Recently Used (LRU)
     algorithm with a per-item time-to-live (TTL) value.
