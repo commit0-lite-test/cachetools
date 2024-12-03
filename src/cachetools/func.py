@@ -22,14 +22,14 @@ class _UnboundTTLCache(TTLCache):
     def __init__(self, ttl: float, timer: Callable[[], float]):
         TTLCache.__init__(self, math.inf, ttl, timer)
 
-def _make_decorator(cache_class, maxsize: int, typed: bool, **kwargs):
+def _make_decorator(cache_class, maxsize, typed: bool, **kwargs):
     def decorator(func: F) -> F:
         if typed:
             key = typedkey
         else:
             key = hashkey
 
-        cache = cache_class(maxsize, **kwargs)
+        cache = cache_class(maxsize, **kwargs) if maxsize is not None else cache_class(**kwargs)
         hits = misses = 0
 
         @wraps(func)
@@ -89,6 +89,8 @@ def mru_cache(maxsize: int = 128, typed: bool = False) -> Callable[[F], F]:
     up to `maxsize` results based on a Most Recently Used (MRU)
     algorithm.
     """
+    import warnings
+    warnings.warn("mru_cache is deprecated", DeprecationWarning, stacklevel=2)
     return _make_decorator(MRUCache, maxsize, typed)
 
 def rr_cache(
