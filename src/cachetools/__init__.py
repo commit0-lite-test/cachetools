@@ -806,12 +806,16 @@ def cachedmethod(cache, key=keys.methodkey, lock=None):
                 c = cache(self)
                 if c is None:
                     return method(self, *args, **kwargs)
-                k = key(self, *args, **kwargs)
                 try:
-                    return c[k]
-                except KeyError:
-                    pass  # key not found
-                v = method(self, *args, **kwargs)
+                    k = key(self, *args, **kwargs)
+                    try:
+                        return c[k]
+                    except KeyError:
+                        pass  # key not found
+                    v = method(self, *args, **kwargs)
+                except TypeError:
+                    # Handle unhashable objects
+                    return method(self, *args, **kwargs)
                 try:
                     c[k] = v
                 except ValueError:
@@ -829,12 +833,16 @@ def cachedmethod(cache, key=keys.methodkey, lock=None):
                 c = cache(self)
                 if c is None:
                     return method(self, *args, **kwargs)
-                k = key(self, *args, **kwargs)
                 try:
-                    with lock(self):
-                        return c[k]
-                except KeyError:
-                    pass  # key not found
+                    k = key(self, *args, **kwargs)
+                    try:
+                        with lock(self):
+                            return c[k]
+                    except KeyError:
+                        pass  # key not found
+                except TypeError:
+                    # Handle unhashable objects
+                    return method(self, *args, **kwargs)
                 v = method(self, *args, **kwargs)
                 # in case of a race, prefer the item already in the cache
                 try:
