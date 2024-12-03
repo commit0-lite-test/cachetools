@@ -78,5 +78,5 @@ def typedmethodkey(self: T, *args: Any, **kwargs: Any) -> _HashedTuple:
     return _HashedTuple(
         tuple(type(v) for v in args)
         + tuple(type(v) for _, v in sorted(kwargs.items()))
-        + key
+        + key[1:]  # Exclude the first element (self) from the key
     )
