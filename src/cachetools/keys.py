@@ -76,8 +76,7 @@ def typedmethodkey(self: T, *args: Any, **kwargs: Any) -> _HashedTuple:
     """Return a typed cache key for use with cached methods."""
     key = methodkey(self, *args, **kwargs)
     return _HashedTuple(
-        (type(self),)
-        + tuple(type(v) for v in args)
+        tuple(type(v) for v in args)
         + tuple(type(v) for _, v in sorted(kwargs.items()))
         + key
     )
