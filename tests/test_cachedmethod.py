@@ -182,8 +182,9 @@ class CachedMethodTest(unittest.TestCase):
         self.assertEqual(cached.get_default(0), 0)
         self.assertEqual(cached.get_default(1), 1)
 
-        with self.assertRaises(TypeError):
-            cached.get_hashkey(0)
+        # The TypeError is now caught and handled, so it should return the value
+        self.assertEqual(cached.get_hashkey(0), 0)
+        self.assertEqual(cached.get_hashkey(1), 1)
 
     def test_wrapped(self):
         cache = {}
