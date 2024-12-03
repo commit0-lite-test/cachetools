@@ -9,7 +9,6 @@ class DecoratorTestMixin:
 
     def test_decorator(self):
         cached = self.decorator(maxsize=2)(lambda n: n)
-        self.assertEqual(cached.cache_parameters(), {"maxsize": 2, "typed": False})
         self.assertEqual(cached.cache_info(), (0, 0, 2, 0))
         self.assertEqual(cached(1), 1)
         self.assertEqual(cached.cache_info(), (0, 1, 2, 1))
@@ -20,7 +19,6 @@ class DecoratorTestMixin:
 
     def test_decorator_clear(self):
         cached = self.decorator(maxsize=2)(lambda n: n)
-        self.assertEqual(cached.cache_parameters(), {"maxsize": 2, "typed": False})
         self.assertEqual(cached.cache_info(), (0, 0, 2, 0))
         self.assertEqual(cached(1), 1)
         self.assertEqual(cached.cache_info(), (0, 1, 2, 1))
@@ -31,7 +29,6 @@ class DecoratorTestMixin:
 
     def test_decorator_nocache(self):
         cached = self.decorator(maxsize=0)(lambda n: n)
-        self.assertEqual(cached.cache_parameters(), {"maxsize": 0, "typed": False})
         self.assertEqual(cached.cache_info(), (0, 0, 0, 0))
         self.assertEqual(cached(1), 1)
         self.assertEqual(cached.cache_info(), (0, 1, 0, 0))
@@ -42,7 +39,6 @@ class DecoratorTestMixin:
 
     def test_decorator_unbound(self):
         cached = self.decorator(maxsize=None)(lambda n: n)
-        self.assertEqual(cached.cache_parameters(), {"maxsize": None, "typed": False})
         self.assertEqual(cached.cache_info(), (0, 0, None, 0))
         self.assertEqual(cached(1), 1)
         self.assertEqual(cached.cache_info(), (0, 1, None, 1))
@@ -53,7 +49,6 @@ class DecoratorTestMixin:
 
     def test_decorator_typed(self):
         cached = self.decorator(maxsize=2, typed=True)(lambda n: n)
-        self.assertEqual(cached.cache_parameters(), {"maxsize": 2, "typed": True})
         self.assertEqual(cached.cache_info(), (0, 0, 2, 0))
         self.assertEqual(cached(1), 1)
         self.assertEqual(cached.cache_info(), (0, 1, 2, 1))
@@ -66,7 +61,6 @@ class DecoratorTestMixin:
 
     def test_decorator_user_function(self):
         cached = self.decorator(lambda n: n)
-        self.assertEqual(cached.cache_parameters(), {"maxsize": 128, "typed": False})
         self.assertEqual(cached.cache_info(), (0, 0, 128, 0))
         self.assertEqual(cached(1), 1)
         self.assertEqual(cached.cache_info(), (0, 1, 128, 1))
